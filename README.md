@@ -1,7 +1,7 @@
 # ChatGPT-TelegramBot
-使用 TelegramBot Api 与 ChatGPT Api 实现在 Telegram 聊天软件里与 ChatGPT AI 对话。
+使用 TelegramBot Api 与 ChatGPT Api 实现在 Telegram 聊天软件里与 ChatGPT AI 对话
 
-使用：
+如何使用：
 1. 拷贝项目
 
 2. 在项目根路径下，执行mvn install命令编译项目
