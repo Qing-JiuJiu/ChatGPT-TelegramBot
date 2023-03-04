@@ -1,0 +1,7 @@
+#请复制该文件复制到jar包根目录下配置好相关参数后运行程序
+
+##chatgpt_api通过OpenAI官网获取：https://platform.openai.com/account/api-keys
+chatgpt_api: 'xxxxxxxxxxxxxx'
+
+##telegram_bot_token通过Telegram机器人@BotFather获取：https://t.me/BotFather
+telegram_bot_token: 'xxxxxx'

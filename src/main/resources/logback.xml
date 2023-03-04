@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!--
+    scan: 当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
+    scanPeriod: 设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，
+    此属性生效。默认的时间间隔为1分钟。
+    debug: 当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
+    -->
+    <!--<contextName>logback-demo</contextName> 区分不同应用程序的记录-->
+    <!--
+    用来定义变量的标签， 有两个属性：name 、value；
+    其中name的是变量名，value 是变量值。定义变量后，可以使 ${} 来使用变量。
+    -->
+    <property name="LOG_HOME" value="./log"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                <![CDATA[
+                 %date{yy-MM-dd HH:mm:ss.SSS}|%thread|%level|%logger{10}|%msg%n
+             ]]>
+            </pattern>
+        </encoder>
+        <!--<encoder charset ="UTF-8">
+            <pattern>%d -2 %msg%n</pattern>
+        </encoder>-->
+    </appender>
+
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--只保留最近7天的日志-->
+            <maxHistory>7</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yy-MM-dd HH:mm:ss.SSS}|%thread|%-5level %logger -%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--指定最基础的日志输出级别-->
+    <root level="INFO" >
+        <appender-ref ref="console"/>
+        <appender-ref ref="rollingFile"/>
+    </root>
+
+</configuration>
