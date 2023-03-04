@@ -1,6 +1,8 @@
 # ChatGPT-TelegramBot
 使用 TelegramBot Api 与 ChatGPT Api 实现在 Telegram 聊天软件里与 ChatGPT AI 对话
 
+注意：在 TelegramBot 发送 /start 新建一个新的 ChatGPT 对话。请每次需要重新对话时，发送 /start 新建对话，否则会影响 ChatGPT 的判断。
+
 如何使用：
 1. 拷贝项目
 
