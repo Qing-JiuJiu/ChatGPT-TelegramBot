@@ -3,12 +3,14 @@ package com.xinqi.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xinqi.bean.ConfigEnum;
+import com.xinqi.bean.User;
 import com.xinqi.util.HttpsClientUtil;
 import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author XinQi
@@ -16,9 +18,11 @@ import java.util.List;
 public class TelegramBotApi {
 
     /**
-     * 得到消息的偏移数据
+     * 消息的偏移数据
      */
     static int update_id = 0;
+
+    public static Map<String, User> userChatData = new HashMap<>();
 
     /**
      * @return 得到的消息
@@ -40,9 +44,14 @@ public class TelegramBotApi {
             return null;
         }
 
+        //得到各个数据
+        JsonNode resultData = result.get(0);
+        JsonNode resultMessage = resultData.get("message");
+        JsonNode resultFrom = resultMessage.get("from");
+
         //将收到消息的第一个update_id设置为偏移量并再次获取该重复消息以便将该消息偏移去除
         if (update_id == 0) {
-            update_id = result.get(0).get("update_id").asInt();
+            update_id = resultData.get("update_id").asInt();
             return getUpdates(botApi, logger);
         }
         logger.info("循环调用 TelegramBot API 得到新消息，请求地址: {}，接口返回内容为: {}，当前 update_id 为: {}", url, jsonNode, update_id);
@@ -50,25 +59,40 @@ public class TelegramBotApi {
         //更新偏移量
         update_id++;
 
-        //得到两个内容，一个是消息内容，一个是消息发送者的id
-        String message = result.get(0).get("message").get("text").asText();
-        String chatId = result.get(0).get("message").get("from").get("id").asText();
-
         //获取配置文件里的白名单列表
+        String chatId = resultFrom.get("id").asText();
         @SuppressWarnings("unchecked") List<String> whitelist = (List<String>) ConfigEnum.WHITELIST.getValue();
-        if (!whitelist.contains("*") && !whitelist.contains(chatId)){
+        if (!whitelist.contains("*") && !whitelist.contains(chatId)) {
             logger.info("用户 {} 不在白名单内，正在调用 TelegramBot API 发送不在白名单内的消息", chatId);
             sendMessage(botApi, chatId, ConfigEnum.NOT_WHITELIST_MSG.getValue().toString(), logger);
             return null;
         }
 
         //判断用户是否是发送了 /start 指令，如果是则发送新建对话消息并删除该用户的ChatGPT对话数据，最终返回Null取消后续操作
-        if ("/start".equalsIgnoreCase(message)){
-            logger.info("用户 {} 发送了 /start 指令，正在调用 TelegramBot API 发送新建对话消息", chatId);
-            ChatGPTApi.chatGptData.remove(chatId);
+        String username = resultFrom.get("username").asText();
+        String message = resultMessage.get("text").asText();
+        if ("/start".equalsIgnoreCase(message)) {
+            logger.info("用户 {} 发送了 /start 指令，正在调用 TelegramBot API 发送新建对话消息", username);
+            userChatData.remove(chatId);
             sendMessage(botApi, chatId, ConfigEnum.START_MSG.getValue().toString(), logger);
             return null;
         }
+
+        //保存用户数据
+        User user = userChatData.get(chatId);
+        long currentTimeMillis = System.currentTimeMillis();
+        if (user == null) {
+            user = new User();
+            user.setChatId(chatId);
+            user.setUserName(username);
+            user.setStartTime(currentTimeMillis);
+            user.setEndTime(currentTimeMillis);
+            logger.info("已新建用户 {} 的数据为: {}", username, user);
+        } else {
+            user.setEndTime(currentTimeMillis);
+            logger.info("已更新用户 {} 的 EndTime 时间为: {}", username, currentTimeMillis);
+        }
+        userChatData.put(chatId, user);
 
         //返回消息
         HashMap<String, String> responseMap = new HashMap<>();

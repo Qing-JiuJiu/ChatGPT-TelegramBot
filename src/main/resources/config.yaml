@@ -9,6 +9,8 @@ telegram_bot_token: ''
 whitelist:
   - '*'
 #用户新建对话返回的消息
-start_msg: '你已新建 ChatGPT 对话（该消息由TelegramBot发出）'
+start_msg: '你已新建 ChatGPT 对话（该消息由 TelegramBot 发出）'
 #用户不在白名单列表时telegram_bot提示的消息
 not_whitelist_msg: '你不在白名单内，无法使用机器人'
+#用户有段时间不使用机器人时，机器人会自动结束对话，该标签为机器人结束对话时的提示消息
+end_meg: '你从上一条 ChatGPT 回复开始，已有段时间未使用 ChatGPT，已自动删除 ChatGPT 对话数据（该消息由 TelegramBot 发出）'

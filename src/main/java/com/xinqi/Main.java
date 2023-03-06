@@ -2,6 +2,7 @@ package com.xinqi;
 
 import com.xinqi.bean.ConfigEnum;
 import com.xinqi.job.ChatGPTJob;
+import com.xinqi.job.UserDeleteJob;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
@@ -83,12 +84,20 @@ public class Main {
         SchedulerFactory factory = new StdSchedulerFactory();
         // 1.创建调度器 Scheduler
         Scheduler scheduler = factory.getScheduler();
+
+        //构建自动消息任务
         // 2.创建JobDetail实例，并与MyJob类绑定(Job执行内容)
-        JobDetail job = JobBuilder.newJob(ChatGPTJob.class).withIdentity("job1", "group1").usingJobData("configPath", configPath).build();
+        JobDetail chatGptJob = JobBuilder.newJob(ChatGPTJob.class).withIdentity("job1", "chatGptJob").build();
         // 3.构建Trigger实例,每隔1秒执行一次
-        Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startNow().withSchedule(CronScheduleBuilder.cronSchedule("0/1 * * * * ? *")).build();
+        Trigger chatGptTrigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "chatGptTrigger").startNow().withSchedule(CronScheduleBuilder.cronSchedule("0/1 * * * * ? *")).build();
+
+        //构建用户数据结束任务
+        JobDetail userDeleteJob = JobBuilder.newJob(UserDeleteJob.class).withIdentity("job1", "userDeleteJob").build();
+        Trigger userDeleteTrigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "userDeleteTrigger").startNow().withSchedule(CronScheduleBuilder.cronSchedule("0 0/5 * * * ? *")).build();
+
         // 4.执行，开启调度器
-        scheduler.scheduleJob(job, trigger);
+        scheduler.scheduleJob(chatGptJob, chatGptTrigger);
+        scheduler.scheduleJob(userDeleteJob, userDeleteTrigger);
         scheduler.start();
         logger.info("已成功开启 ChatGPT-TelegramBot，请确保对应 API 参数正确和网络能正常访问相关服务");
     }
