@@ -1,8 +1,8 @@
 package com.xinqi.job;
 
-import com.xinqi.Main;
 import com.xinqi.api.ChatGPTApi;
 import com.xinqi.api.TelegramBotApi;
+import com.xinqi.bean.ConfigEnum;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -21,14 +21,15 @@ public class ChatGPTJob implements Job {
     static Logger logger = LoggerFactory.getLogger(ChatGPTJob.class.getName());
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext){
-        //接收TelegramBot消息
-        String telegramBotToken = (String) Main.config.get("telegram_bot_token");
-        Map<String,String> botMessage;
+    public void execute(JobExecutionContext jobExecutionContext) {
+        //接收TelegramBot消息;
+        String telegramBotToken = ConfigEnum.TELEGRAM_BOT_TOKEN.getValue().toString();
+        Map<String, String> botMessage = null;
         try {
-            botMessage = TelegramBotApi.getUpdates(telegramBotToken,logger);
+            botMessage = TelegramBotApi.getUpdates(telegramBotToken, logger);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("接收 TelegramBot 消息失败，请检查网络条件和配置文件中 telegram_bot_token 的内容是否正确");
+            System.exit(0);
         }
 
         //如果TelegramBot没有新消息，直接返回
@@ -37,19 +38,20 @@ public class ChatGPTJob implements Job {
         }
 
         //得到ChatGPT回复
-        String chatGptApi = (String) Main.config.get("chatgpt_api");
-        String chatGptMessage;
+        String chatGptMessage = null;
         try {
-            chatGptMessage = ChatGPTApi.getMessage(chatGptApi, botMessage, logger);
+            chatGptMessage = ChatGPTApi.getMessage(ConfigEnum.CHATGPT_API.getValue().toString(), botMessage, logger);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("接收 ChatGPT 回复内容失败，请检查网络条件和配置文件中 chatgpt_api 的内容是否正确");
+            System.exit(0);
         }
 
         //发送TelegramBot消息
         try {
             TelegramBotApi.sendMessage(telegramBotToken, botMessage.get("chat_id"), chatGptMessage, logger);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("发送 TelegramBot 消息失败，请检查网络条件和配置文件中 telegram_bot_token 的内容是否正确");
+            System.exit(0);
         }
     }
 }

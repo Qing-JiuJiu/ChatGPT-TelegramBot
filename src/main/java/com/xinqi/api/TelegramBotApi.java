@@ -2,7 +2,7 @@ package com.xinqi.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xinqi.Main;
+import com.xinqi.bean.ConfigEnum;
 import com.xinqi.util.HttpsClientUtil;
 import org.slf4j.Logger;
 
@@ -55,10 +55,10 @@ public class TelegramBotApi {
         String chatId = result.get(0).get("message").get("from").get("id").asText();
 
         //获取配置文件里的白名单列表
-        @SuppressWarnings("unchecked") List<String> whitelist = (List<String>) Main.config.get("whitelist");
+        @SuppressWarnings("unchecked") List<String> whitelist = (List<String>) ConfigEnum.WHITELIST.getValue();
         if (!whitelist.contains("*") && !whitelist.contains(chatId)){
             logger.info("用户 {} 不在白名单内，正在调用 TelegramBot API 发送不在白名单内的消息", chatId);
-            sendMessage(botApi, chatId, Main.config.get("not_whitelist_msg").toString(), logger);
+            sendMessage(botApi, chatId, ConfigEnum.NOT_WHITELIST_MSG.getValue().toString(), logger);
             return null;
         }
 
@@ -66,7 +66,7 @@ public class TelegramBotApi {
         if ("/new".equalsIgnoreCase(message)){
             logger.info("用户 {} 发送了 /new 指令，正在调用 TelegramBot API 发送新建对话消息", chatId);
             ChatGPTApi.chatGptData.remove(chatId);
-            sendMessage(botApi, chatId, "你已新建对话（该消息由TelegramBot发出）", logger);
+            sendMessage(botApi, chatId, ConfigEnum.NEW_MSG.getValue().toString(), logger);
             return null;
         }
 

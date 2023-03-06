@@ -1,13 +1,14 @@
-#请复制该文件复制到jar包根目录下配置好相关参数后运行程序
-
+##必填标签
 #chatgpt_api通过OpenAI官网获取：https://platform.openai.com/account/api-keys
-chatgpt_api: 'xxxxxxxxxxxxxx'
+chatgpt_api: ''
+#必须填写标签，telegram_bot_token通过Telegram机器人@BotFather获取：https://t.me/BotFather
+telegram_bot_token: ''
 
-#telegram_bot_token通过Telegram机器人@BotFather获取：https://t.me/BotFather
-telegram_bot_token: 'xxxxxxxxxxxxxx'
-#白名单：只有白名单内的用户才能使用机器人，默认*，代表所有用户都能使用，内容为用户的Telegram ID，可通过@userinfobot获取
+##可选标签
+#白名单：只有白名单内的用户才能使用机器人，内容为用户的Telegram ID，可通过@userinfobot获取
 whitelist:
-  - '*'
-#不是白名单telegram_bot提示消息
+  - '*' #代表所有用户都能使用
+#用户新建对话返回的消息
+new_msg: '你已新建 ChatGPT 对话（该消息由TelegramBot发出）'
+#用户不在白名单列表时telegram_bot提示的消息
 not_whitelist_msg: '你不在白名单内，无法使用机器人'
-

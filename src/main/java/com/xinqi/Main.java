@@ -1,7 +1,7 @@
 package com.xinqi;
 
+import com.xinqi.bean.ConfigEnum;
 import com.xinqi.job.ChatGPTJob;
-
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,8 +24,6 @@ import java.util.Map;
 public class Main {
 
     static Logger logger = LoggerFactory.getLogger(Main.class);
-
-    public static Map<String, Object> config = new HashMap<>();
 
     public static void main(String[] args) throws IOException, SchedulerException {
         //得到配置文件的目录
@@ -38,12 +38,45 @@ public class Main {
         configPath = new File(configPath).getPath();
 
         //读取配置文件
+        Map<String, Object> config = new HashMap<>();
         try {
             config = new Yaml().load(Files.newInputStream(Paths.get(configPath)));
         } catch (IOException e) {
-            logger.error("无法从" + configPath + "该路径下获取配置文件，请检查该路径是否存在配置文件，配置文件可通过解压jar包获得");
+            logger.error("无法从{}该路径下获取配置文件，请检查该路径是否存在配置文件，配置文件可通过解压jar包获得", configPath);
             e.printStackTrace();
             System.exit(0);
+        }
+
+        //循环读取枚举，将配置文件里内容并写入至枚举中，并检查严重性标签是否缺失内容
+        ConfigEnum[] configEnums = ConfigEnum.values();
+        List<String> configNoKeyList = new ArrayList<>();
+        List<String> configNoKeyByMust = new ArrayList<>();
+        for (ConfigEnum configEnum : configEnums) {
+            String configEnumKey = configEnum.getKey();
+            Object configNode = config.get(configEnumKey);
+            if (configNode != null && !("").equals(configNode.toString())) {
+                configEnum.setValue(configNode);
+            } else {
+                if ("chatgpt_api".equals(configEnumKey) || "telegram_bot_token".equals(configEnumKey)) {
+                    configNoKeyByMust.add(configEnumKey);
+                }
+                configNoKeyList.add(configEnumKey);
+            }
+        }
+
+        //判断是否有必须标签丢失
+        if (configNoKeyByMust.size() > 0) {
+            for (String configNoKeyTag : configNoKeyByMust) {
+                logger.error("配置文件缺少标签或标签内容为空：{}，该标签为严重性标签，程序将无法正常运行，请检查配置文件", configNoKeyTag);
+            }
+            System.exit(0);
+        }
+
+        //判断是否有标签丢失
+        if (configNoKeyList.size() > 0) {
+            for (String configNoKeyTag : configNoKeyList) {
+                logger.warn("配置文件缺少标签：{}，该标签将使用默认值", configNoKeyTag);
+            }
         }
 
         //创建调度器工厂
@@ -57,7 +90,6 @@ public class Main {
         // 4.执行，开启调度器
         scheduler.scheduleJob(job, trigger);
         scheduler.start();
-
-        logger.info("已成功开启ChatGPT，每隔1秒将会自动获取Telegram机器人消息，请确保对应 API 参数正确且网络能正常访问相关服务，否则将会出现大量报错");
+        logger.info("已成功开启ChatGPT-TelegramBot，请确保对应 API 参数正确和网络能正常访问相关服务");
     }
 }
