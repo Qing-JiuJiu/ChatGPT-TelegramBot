@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public class ChatGPTApi {
 
+    //TODO 需要添加定时任务定时清理不需要的key，防止内存泄漏
     //用于存储用户的JSON数据，方便下次调用，用于聊天
     static Map<String, String> chatGptData = new HashMap<>();
 

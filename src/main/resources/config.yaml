@@ -9,6 +9,6 @@ telegram_bot_token: ''
 whitelist:
   - '*'
 #用户新建对话返回的消息
-new_msg: '你已新建 ChatGPT 对话（该消息由TelegramBot发出）'
+start_msg: '你已新建 ChatGPT 对话（该消息由TelegramBot发出）'
 #用户不在白名单列表时telegram_bot提示的消息
 not_whitelist_msg: '你不在白名单内，无法使用机器人'
