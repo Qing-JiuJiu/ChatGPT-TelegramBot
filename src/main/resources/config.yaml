@@ -5,9 +5,9 @@ chatgpt_api: ''
 telegram_bot_token: ''
 
 ##可选标签
-#白名单：只有白名单内的用户才能使用机器人，内容为用户的Telegram ID，可通过@userinfobot获取
+#白名单：只有白名单内的用户才能使用机器人，'*'代表所有用户，内容为用户的Telegram ID，可通过@userinfobot获取
 whitelist:
-  - '*' #代表所有用户都能使用
+  - '*'
 #用户新建对话返回的消息
 new_msg: '你已新建 ChatGPT 对话（该消息由TelegramBot发出）'
 #用户不在白名单列表时telegram_bot提示的消息
