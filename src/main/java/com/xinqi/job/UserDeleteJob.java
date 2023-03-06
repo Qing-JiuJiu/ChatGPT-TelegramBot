@@ -20,7 +20,7 @@ public class UserDeleteJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        logger.info("开始检查用户数据");
+        logger.info("开始检查用户数据，检查用户是否长时间使用 ChatGPT 或超过一段时间未使用 ChatGPT");
 
         String endMessage = ConfigEnum.END_MEG.getValue().toString();
         String telegramBotToken = ConfigEnum.TELEGRAM_BOT_TOKEN.getValue().toString();
@@ -28,6 +28,8 @@ public class UserDeleteJob implements Job {
 
         //判断每个用户系统当前时间跟结束时间是否超过5分钟,如果超过5分钟,删除用户数据
         for (User user : TelegramBotApi.userChatData.values()) {
+            String userName = user.getUserName();
+            logger.info("正在检查用户 {} 的数据为：{}", userName, user);
             if (currentTimeMillis - user.getEndTime() > 60 * 5 * 1000) {
                 String chatId = user.getChatId();
                 try {
@@ -36,16 +38,12 @@ public class UserDeleteJob implements Job {
                     logger.error("发送 TelegramBot 消息失败，请检查网络条件和配置文件中 telegram_bot_token 的内容是否正确");
                 }
                 TelegramBotApi.userChatData.remove(chatId);
-                logger.info("已删除用户 {} 的数据: {}", user.getUserName(), user);
+                logger.info("已删除用户 {} 的数据: {}", userName, user);
+            } else if (user.getEndTime() - user.getStartTime() > 60 * 60 * 1000) {
+                //如果用户持续使用 ChatGPT 超过1个钟，记录日志
+                logger.warn("用户 {} 已持续使用 ChatGPT 超过1个钟，用户数据为：{}", userName, user);
             }
         }
-
-        //判断每个用户系统开始时间跟结束时间是否超过60分钟，如果超过60分钟，发送警告日志
-        TelegramBotApi.userChatData.forEach((chatId, user) -> {
-            if (user.getEndTime() - user.getStartTime() > 60 * 60 * 1000) {
-                logger.warn("用户 {} 持续使用 ChatGPT 超过1个钟，用户数据为：{}", user.getUserName(), user);
-            }
-        });
 
         logger.info("检查用户数据结束");
     }
