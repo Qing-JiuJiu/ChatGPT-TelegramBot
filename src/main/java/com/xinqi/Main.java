@@ -42,7 +42,7 @@ public class Main {
         try {
             config = new Yaml().load(Files.newInputStream(Paths.get(configPath)));
         } catch (IOException e) {
-            logger.error("无法从{}该路径下获取配置文件，请检查该路径是否存在配置文件，配置文件可通过解压jar包获得", configPath);
+            logger.error("无法从 {} 该路径下获取配置文件，请检查该路径是否存在配置文件，配置文件可通过解压 jar 包获得", configPath);
             e.printStackTrace();
             System.exit(0);
         }
@@ -90,6 +90,6 @@ public class Main {
         // 4.执行，开启调度器
         scheduler.scheduleJob(job, trigger);
         scheduler.start();
-        logger.info("已成功开启ChatGPT-TelegramBot，请确保对应 API 参数正确和网络能正常访问相关服务");
+        logger.info("已成功开启 ChatGPT-TelegramBot，请确保对应 API 参数正确和网络能正常访问相关服务");
     }
 }
