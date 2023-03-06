@@ -2,11 +2,13 @@ package com.xinqi.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xinqi.Main;
 import com.xinqi.util.HttpsClientUtil;
 import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author XinQi
@@ -48,20 +50,30 @@ public class TelegramBotApi {
         //更新偏移量
         update_id++;
 
-        //返回两个内容，一个是消息内容，一个是消息发送者的id
-        HashMap<String, String> responseMap = new HashMap<>();
+        //得到两个内容，一个是消息内容，一个是消息发送者的id
         String message = result.get(0).get("message").get("text").asText();
         String chatId = result.get(0).get("message").get("from").get("id").asText();
-        responseMap.put("message", message);
-        responseMap.put("chat_id", chatId);
 
-        //判断用户是否是发送了 /start 指令，如果是则发送新建对话消息并删除该用户的ChatGPT对话数据，最终返回Null取消后续操作
-        if ("/start".equalsIgnoreCase(message)){
-            logger.info("用户 {} 发送了 /start 指令，正在调用 TelegramBot API 发送新建对话消息", responseMap.get("chat_id"));
-            ChatGPTApi.chatGptData.remove(chatId);
-            sendMessage(botApi, responseMap.get("chat_id"), "你已新建一个对话（该消息由TelegramBot发出）", logger);
+        //获取配置文件里的白名单列表
+        @SuppressWarnings("unchecked") List<String> whitelist = (List<String>) Main.config.get("whitelist");
+        if (!whitelist.contains("*") && !whitelist.contains(chatId)){
+            logger.info("用户 {} 不在白名单内，正在调用 TelegramBot API 发送不在白名单内的消息", chatId);
+            sendMessage(botApi, chatId, Main.config.get("not_whitelist_msg").toString(), logger);
             return null;
         }
+
+        //判断用户是否是发送了 /start 指令，如果是则发送新建对话消息并删除该用户的ChatGPT对话数据，最终返回Null取消后续操作
+        if ("/new".equalsIgnoreCase(message)){
+            logger.info("用户 {} 发送了 /new 指令，正在调用 TelegramBot API 发送新建对话消息", chatId);
+            ChatGPTApi.chatGptData.remove(chatId);
+            sendMessage(botApi, chatId, "你已新建对话（该消息由TelegramBot发出）", logger);
+            return null;
+        }
+
+        //返回消息
+        HashMap<String, String> responseMap = new HashMap<>();
+        responseMap.put("message", message);
+        responseMap.put("chat_id", chatId);
         return responseMap;
     }
 
