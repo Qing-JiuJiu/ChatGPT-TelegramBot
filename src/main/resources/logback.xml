@@ -43,6 +43,10 @@
     </appender>
 
     <appender name="rollingErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--设置只记录 error 日志-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
             <FileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.log</FileNamePattern>
@@ -62,9 +66,7 @@
     <root level="INFO" >
         <appender-ref ref="console"/>
         <appender-ref ref="rollingFile"/>
-
-    </root>
-    <root level="ERROR">
         <appender-ref ref="rollingErrorFile"/>
     </root>
+
 </configuration>
