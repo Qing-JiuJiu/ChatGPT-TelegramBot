@@ -42,10 +42,29 @@
         </encoder>
     </appender>
 
+    <appender name="rollingErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--只保留最近7天的日志-->
+            <maxHistory>7</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yy-MM-dd HH:mm:ss.SSS}|%thread|%-5level %logger -%msg%n</pattern>
+        </encoder>
+    </appender>
+
     <!--指定最基础的日志输出级别-->
     <root level="INFO" >
         <appender-ref ref="console"/>
         <appender-ref ref="rollingFile"/>
-    </root>
 
+    </root>
+    <root level="ERROR">
+        <appender-ref ref="rollingErrorFile"/>
+    </root>
 </configuration>
