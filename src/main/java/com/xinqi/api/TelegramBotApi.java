@@ -69,7 +69,7 @@ public class TelegramBotApi {
         }
 
         //判断用户是否是发送了 /start 指令，如果是则发送新建对话消息并删除该用户的ChatGPT对话数据，最终返回Null取消后续操作
-        String username = resultFrom.get("username").asText();
+        String username = resultFrom.get("first_name").asText() + " " + resultFrom.get("last_name").asText();
         String message = resultMessage.get("text").asText();
         if ("/start".equalsIgnoreCase(message)) {
             logger.info("用户 {} 发送了 /start 指令，正在调用 TelegramBot API 发送新建对话消息", username);
