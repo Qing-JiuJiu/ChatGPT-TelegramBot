@@ -11,11 +11,11 @@ whitelist:
 #自动配置默认菜单，机器人会自动配置/start、/response、/history三个指令，推荐首次运行该程序时启用。
 configure_default_menu: false
 #用户新建对话返回的消息
-start_msg: '已新建 ChatGPT 对话，你可以使用 /response 重新回到上一次对话（该消息由 TelegramBot 发出）'
+start_msg: '已新建 ChatGPT 对话，你可以发送 /response 重新回到上一次对话（该消息由 TelegramBot 发出）'
 #用户不在白名单列表时 telegram_bot 提示的消息
 not_whitelist_msg: '你不在白名单内，无法使用机器人（该消息由 TelegramBot 发出）'
 #chatgpt 响应失败时发送的消息
-chatgpt_error_msg: 'ChatGPT 响应失败，请使用 /response 重试，若频繁出现此问题，请联系管理员（该消息由 TelegramBot 发出）'
+chatgpt_error_msg: 'ChatGPT 响应失败，请发送 /response 重试，若频繁出现此问题，请联系管理员（该消息由 TelegramBot 发出）'
 #用户使用 /history 命令时返回的提示消息
 history_msg: '已回到上一次对话（该消息由 TelegramBot 发出）'
 #用户使用 /history 命令时，但是没有上一次对话时返回的提示消息
