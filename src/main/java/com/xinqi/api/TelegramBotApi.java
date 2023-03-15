@@ -157,7 +157,7 @@ public class TelegramBotApi {
 
         //准备请求地址和json
         String url = "https://api.telegram.org/bot" + botApi + "/setMyCommands";
-        String jsonData = "{\"commands\": [{\"command\": \"/start\",\"description\": \"开始一个新的对话\"},{\"command\": \"/response\",\"description\": \"重新响应当前对话\"},{\"command\": \"/history\",\"description\": \"继续上一次对话\"}]}";
+        String jsonData = "{\"commands\": [{\"command\": \"/start\",\"description\": \"开始一个新的对话\"},{\"command\": \"/response\",\"description\": \"重新响应当前对话\"},{\"command\": \"/history\",\"description\": \"回到上一次对话\"}]}";
 
         //发送请求
         logger.info("正在调用 TelegramBot API 设置菜单，请求地址: {}，请求参数: {}", url, jsonData);
