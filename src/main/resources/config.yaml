@@ -5,11 +5,11 @@ chatgpt_api: ''
 telegram_bot_token: ''
 
 ##可选标签
-#自动配置默认菜单，机器人会自动配置/start、/response、/history三个指令，推荐首次运行该程序时启用。
-configure_default_menu: false
 #白名单：只有白名单内的用户才能使用机器人，'*'代表所有用户，内容为用户的Telegram ID，可通过@userinfobot获取
 whitelist:
   - '*'
+#自动配置默认菜单，机器人会自动配置/start、/response、/history三个指令，推荐首次运行该程序时启用。
+configure_default_menu: false
 #用户新建对话返回的消息
 start_msg: '你已新建 ChatGPT 对话（该消息由 TelegramBot 发出）'
 #用户不在白名单列表时 telegram_bot 提示的消息
