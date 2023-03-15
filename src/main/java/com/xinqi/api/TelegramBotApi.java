@@ -78,7 +78,6 @@ public class TelegramBotApi {
             return null;
         }
 
-
         //保存用户数据
         User user = userChatData.get(chatId);
         long currentTimeMillis = System.currentTimeMillis();

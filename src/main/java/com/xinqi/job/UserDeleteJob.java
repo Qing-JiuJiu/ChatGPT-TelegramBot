@@ -35,13 +35,14 @@ public class UserDeleteJob implements Job {
                 try {
                     TelegramBotApi.sendMessage(telegramBotToken, chatId, endMessage, logger);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     logger.error("发送 TelegramBot 消息失败，请检查网络条件和配置文件中 telegram_bot_token 的内容是否正确");
                 }
                 TelegramBotApi.userChatData.remove(chatId);
-                logger.info("已删除用户 {} 的数据: {}", userName, user);
+                logger.info("已删除用户 {} 的数据", userName);
             } else if (user.getEndTime() - user.getStartTime() > 60 * 60 * 1000) {
                 //如果用户持续使用 ChatGPT 超过1个钟，记录日志
-                logger.warn("用户 {} 已持续使用 ChatGPT 超过1个钟，用户数据为：{}", userName, user);
+                logger.warn("用户 {} 已持续使用 ChatGPT 超过1个钟", userName);
             }
         }
 
