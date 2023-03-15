@@ -22,21 +22,22 @@ public class UserDeleteJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) {
         logger.info("开始检查用户数据，检查用户是否长时间使用 ChatGPT 或超过一段时间未使用 ChatGPT");
 
-        String endMessage = ConfigEnum.END_MEG.getValue().toString();
+        String endMessage = ConfigEnum.END_MSG.getValue().toString();
         String telegramBotToken = ConfigEnum.TELEGRAM_BOT_TOKEN.getValue().toString();
         long currentTimeMillis = System.currentTimeMillis();
 
-        //判断每个用户系统当前时间跟结束时间是否超过5分钟,如果超过5分钟,删除用户数据
+        //判断每个用户系统当前时间跟结束时间是否超过15分钟,如果超过15分钟,删除用户数据
         for (User user : TelegramBotApi.userChatData.values()) {
             String userName = user.getUserName();
             logger.info("正在检查用户 {} 的数据为：{}", userName, user);
-            if (currentTimeMillis - user.getEndTime() > 60 * 5 * 1000) {
+            if (currentTimeMillis - user.getEndTime() > 60 * 15 * 1000) {
                 String chatId = user.getChatId();
                 try {
                     TelegramBotApi.sendMessage(telegramBotToken, chatId, endMessage, logger);
                 } catch (Exception e) {
                     logger.error("发送 TelegramBot 消息失败，请检查网络条件和配置文件中 telegram_bot_token 的内容是否正确，错误打印：{}", e.getMessage());
                 }
+                TelegramBotApi.userHistoryChatData.put(chatId, user);
                 TelegramBotApi.userChatData.remove(chatId);
                 logger.info("已删除用户 {} 的数据", userName);
             } else if (user.getEndTime() - user.getStartTime() > 60 * 60 * 1000) {

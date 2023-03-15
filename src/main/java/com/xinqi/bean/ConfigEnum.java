@@ -10,9 +10,13 @@ public enum ConfigEnum {
     CHATGPT_API("chatgpt_api",null),
     TELEGRAM_BOT_TOKEN("telegram_bot_token",null),
     START_MSG("start_msg","你已新建对话（该消息由TelegramBot发出）"),
+    CONFIGURE_DEFAULT_MENU("configure_default_menu",false),
     WHITELIST("whitelist",Collections.singletonList("*")),
     NOT_WHITELIST_MSG("not_whitelist_msg","你不在白名单内，无法使用机器人"),
-    END_MEG("end_meg","你从上一条 ChatGPT 回复开始，已有段时间未使用 ChatGPT，已自动删除 ChatGPT 对话数据（该消息由 TelegramBot 发出）");
+    CHATGPT_ERROR_MSG("chatgpt_error_msg","ChatGPT 响应失败，请使用 /response 重试，若频繁出现此问题，请联系管理员（该消息由 TelegramBot 发出）"),
+    END_MSG("end_msg","你从上一条 ChatGPT 回复开始，已有段时间未使用 ChatGPT，已自动删除 ChatGPT 对话数据，如需要继续上一次对话请发送 /history（该消息由 TelegramBot 发出）"),
+    HISTORY_MSG("history_msg","你已回到上一次对话（该消息由 TelegramBot 发出）"),
+    NO_HISTORY_MSG("no_history_msg","你没有上一次对话（该消息由 TelegramBot 发出）");
 
     private final String key;
     private Object value;

@@ -1,5 +1,6 @@
 package com.xinqi;
 
+import com.xinqi.api.TelegramBotApi;
 import com.xinqi.bean.ConfigEnum;
 import com.xinqi.job.ChatGPTJob;
 import com.xinqi.job.UserDeleteJob;
@@ -26,7 +27,7 @@ public class Main {
 
     static Logger logger = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String[] args) throws IOException, SchedulerException {
+    public static void main(String[] args) throws Exception {
         //得到配置文件的目录
         //获取类当前路径
         String configPath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -75,6 +76,16 @@ public class Main {
         if (!configNoKeyList.isEmpty()) {
             for (String configNoKeyTag : configNoKeyList) {
                 logger.warn("配置文件缺少标签：{}，该标签将使用默认值", configNoKeyTag);
+            }
+        }
+
+        if ((Boolean) ConfigEnum.CONFIGURE_DEFAULT_MENU.getValue()){
+            logger.info("已开启配置默认菜单，将在启动时自动创建默认菜单");
+            try {
+                TelegramBotApi.setMyCommands(ConfigEnum.TELEGRAM_BOT_TOKEN.getValue().toString(), logger);
+            } catch (Exception e) {
+                logger.error("配置默认菜单失败，请检查网络条件或配置文件 telegram_bot_token 标签内容正确，错误打印：{}", e.getMessage());
+                System.exit(0);
             }
         }
 

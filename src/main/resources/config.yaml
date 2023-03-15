@@ -5,12 +5,20 @@ chatgpt_api: ''
 telegram_bot_token: ''
 
 ##可选标签
+#自动配置默认菜单，机器人会自动配置/start、/response、/history三个指令，推荐首次运行该程序时启用。
+configure_default_menu: false
 #白名单：只有白名单内的用户才能使用机器人，'*'代表所有用户，内容为用户的Telegram ID，可通过@userinfobot获取
 whitelist:
   - '*'
 #用户新建对话返回的消息
 start_msg: '你已新建 ChatGPT 对话（该消息由 TelegramBot 发出）'
-#用户不在白名单列表时telegram_bot提示的消息
-not_whitelist_msg: '你不在白名单内，无法使用机器人'
+#用户不在白名单列表时 telegram_bot 提示的消息
+not_whitelist_msg: '你不在白名单内，无法使用机器人（该消息由 TelegramBot 发出）'
+#chatgpt 响应失败时发送的消息
+chatgpt_error_msg: 'ChatGPT 响应失败，请使用 /response 重试，若频繁出现此问题，请联系管理员（该消息由 TelegramBot 发出）'
+#用户使用 /history 命令时返回的提示消息
+history_msg: '你已回到上一次对话（该消息由 TelegramBot 发出）'
+#用户使用 /history 命令时，但是没有上一次对话时返回的提示消息
+no_history_msg: '你没有上一次对话（该消息由 TelegramBot 发出）'
 #用户有段时间不使用机器人时，机器人会自动结束对话，该标签为机器人结束对话时的提示消息
-end_meg: '你从上一条 ChatGPT 回复开始，已有段时间未使用 ChatGPT，已自动删除 ChatGPT 对话数据（该消息由 TelegramBot 发出）'
+end_msg: '你从上一条 ChatGPT 回复开始，已有段时间未使用 ChatGPT，已自动删除 ChatGPT 对话数据，如需要继续上一次对话请发送 /history（该消息由 TelegramBot 发出）'

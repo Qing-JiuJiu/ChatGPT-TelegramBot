@@ -19,6 +19,7 @@ import java.util.Map;
 public class ChatGPTJob implements Job {
 
     static Logger logger = LoggerFactory.getLogger(ChatGPTJob.class.getName());
+
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         //接收TelegramBot消息;
@@ -42,6 +43,11 @@ public class ChatGPTJob implements Job {
             chatGptMessage = ChatGPTApi.getMessage(ConfigEnum.CHATGPT_API.getValue().toString(), botMessage, logger);
         } catch (Exception e) {
             logger.error("接收 ChatGPT 回复内容失败，请检查网络条件和配置文件中 chatgpt_api 的内容是否正确，错误打印：{}", e.getMessage());
+            try {
+                TelegramBotApi.sendMessage(telegramBotToken, botMessage.get("chat_id"), ConfigEnum.CHATGPT_ERROR_MSG.getValue().toString(), logger);
+            } catch (Exception ex) {
+                logger.error("接收 TelegramBot 消息失败，请检查网络条件和配置文件中 telegram_bot_token 的内容是否正确，错误打印：{}", e.getMessage());
+            }
             return;
         }
 

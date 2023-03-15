@@ -7,6 +7,7 @@ public class User {
     String chatId;
     String userName;
     String message;
+    String reMessage;
     long startTime;
     long endTime;
 
@@ -38,6 +39,26 @@ public class User {
         return startTime;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "chatId='" + chatId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", message='" + message + '\'' +
+                ", reMessage='" + reMessage + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
+
+    public String getReMessage() {
+        return reMessage;
+    }
+
+    public void setReMessage(String reMessage) {
+        this.reMessage = reMessage;
+    }
+
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
@@ -48,17 +69,6 @@ public class User {
 
     public void setEndTime(long endTime) {
         this.endTime = endTime;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "chatId='" + chatId + '\'' +
-                ", userName='" + userName + '\'' +
-                ", message='" + message + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                '}';
     }
 
     public User() {
