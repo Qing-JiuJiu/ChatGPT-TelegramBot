@@ -57,16 +57,15 @@ public class Main {
             Object configNode = config.get(configEnumKey);
             if (configNode != null && !("").equals(configNode.toString())) {
                 configEnum.setValue(configNode);
+            } else if ("chatgpt_api".equals(configEnumKey) || "telegram_bot_token".equals(configEnumKey)) {
+                configNoKeyByMust.add(configEnumKey);
             } else {
-                if ("chatgpt_api".equals(configEnumKey) || "telegram_bot_token".equals(configEnumKey)) {
-                    configNoKeyByMust.add(configEnumKey);
-                }
                 configNoKeyList.add(configEnumKey);
             }
         }
 
         //判断是否有必须标签丢失
-        if (configNoKeyByMust.size() > 0) {
+        if (!configNoKeyByMust.isEmpty()) {
             for (String configNoKeyTag : configNoKeyByMust) {
                 logger.error("配置文件缺少标签或标签内容为空：{}，该标签为严重性标签，程序将无法正常运行，请检查配置文件", configNoKeyTag);
             }
@@ -74,7 +73,7 @@ public class Main {
         }
 
         //判断是否有标签丢失
-        if (configNoKeyList.size() > 0) {
+        if (!configNoKeyList.isEmpty()) {
             for (String configNoKeyTag : configNoKeyList) {
                 logger.warn("配置文件缺少标签：{}，该标签将使用默认值", configNoKeyTag);
             }
