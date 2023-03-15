@@ -35,8 +35,7 @@ public class UserDeleteJob implements Job {
                 try {
                     TelegramBotApi.sendMessage(telegramBotToken, chatId, endMessage, logger);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.error("发送 TelegramBot 消息失败，请检查网络条件和配置文件中 telegram_bot_token 的内容是否正确");
+                    logger.error("发送 TelegramBot 消息失败，请检查网络条件和配置文件中 telegram_bot_token 的内容是否正确，错误打印：{}", e.getMessage());
                 }
                 TelegramBotApi.userChatData.remove(chatId);
                 logger.info("已删除用户 {} 的数据", userName);

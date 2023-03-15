@@ -43,8 +43,7 @@ public class Main {
         try {
             config = new Yaml().load(Files.newInputStream(Paths.get(configPath)));
         } catch (IOException e) {
-            logger.error("无法从 {} 该路径下获取配置文件，请检查该路径是否存在配置文件，配置文件可通过解压 jar 包获得", configPath);
-            e.printStackTrace();
+            logger.error("无法从 {} 该路径下获取配置文件，请检查该路径是否存在配置文件，配置文件可通过解压 jar 包获得，错误打印：{}", configPath, e.getMessage());
             System.exit(0);
         }
 
