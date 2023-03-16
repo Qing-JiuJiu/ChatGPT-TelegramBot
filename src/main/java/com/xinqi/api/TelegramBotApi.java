@@ -52,15 +52,16 @@ public class TelegramBotApi {
             update_id = resultData.get("update_id").asInt();
             return getUpdates(botApi, logger);
         }
-        logger.info("循环调用 TelegramBot API 得到新消息，请求地址: {}，接口返回内容为: {}，当前 update_id 为: {}", url, jsonNode, update_id);
         update_id++;
 
         //得到其他所需数据
         JsonNode resultMessage = resultData.get("message");
         //判断是否是新消息，如果是编辑的消息json数据里是edited_message，这里不处理编辑的消息
         if (resultMessage == null){
+            logger.info("循环调用 TelegramBot API 得到编辑的消息，将跳过该消息，请求地址: {}，接口返回内容为: {}，当前 update_id 为: {}", url, jsonNode, update_id);
             return null;
         }
+        logger.info("循环调用 TelegramBot API 得到新消息，请求地址: {}，接口返回内容为: {}，当前 update_id 为: {}", url, jsonNode, update_id);
         JsonNode resultFrom = resultMessage.get("from");
 
         //获取配置文件里的白名单列表
