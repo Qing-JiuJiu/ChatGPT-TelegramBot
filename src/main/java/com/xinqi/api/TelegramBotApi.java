@@ -45,20 +45,23 @@ public class TelegramBotApi {
             return null;
         }
 
-        //得到各个数据
+        //更新偏移量
         JsonNode resultData = result.get(0);
-        JsonNode resultMessage = resultData.get("message");
-        JsonNode resultFrom = resultMessage.get("from");
-
         //将收到消息的第一个update_id设置为偏移量并再次获取该重复消息以便将该消息偏移去除
         if (update_id == 0) {
             update_id = resultData.get("update_id").asInt();
             return getUpdates(botApi, logger);
         }
         logger.info("循环调用 TelegramBot API 得到新消息，请求地址: {}，接口返回内容为: {}，当前 update_id 为: {}", url, jsonNode, update_id);
-
-        //更新偏移量
         update_id++;
+
+        //得到其他所需数据
+        JsonNode resultMessage = resultData.get("message");
+        //判断是否是新消息，如果是编辑的消息json数据里是edited_message，这里不处理编辑的消息
+        if (resultMessage == null){
+            return null;
+        }
+        JsonNode resultFrom = resultMessage.get("from");
 
         //获取配置文件里的白名单列表
         String chatId = resultFrom.get("id").asText();
