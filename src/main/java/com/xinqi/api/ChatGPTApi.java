@@ -28,10 +28,10 @@ public class ChatGPTApi {
 
         if (StringUtils.nonEmptyString(userMessage)) {
             if (!"/response".equals(message)) {
-                chatGptMessage = userMessage + ",{\"role\": \"user\", \"content\": \"" + message.replace("\"", "\\\"") + "\"}";
+                chatGptMessage = userMessage + ",{\"role\": \"user\", \"content\": \"" + message.replace("\"", "\\\"").replace("\\","\\\\") + "\"}";
             }
         } else {
-            chatGptMessage = "{\"role\": \"user\", \"content\": \"" + message.replace("\"", "\\\"") + "\"}";
+            chatGptMessage = "{\"role\": \"user\", \"content\": \"" + message.replace("\"", "\\\"").replace("\\","\\\\") + "\"}";
         }
         user.setReMessage(chatGptMessage);
 
