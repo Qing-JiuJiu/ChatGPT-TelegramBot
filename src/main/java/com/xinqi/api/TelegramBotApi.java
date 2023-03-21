@@ -143,7 +143,7 @@ public class TelegramBotApi {
         //准备请求地址和json
         String url = "https://api.telegram.org/bot" + botApi + "/sendMessage";
         //转义json字符串里的"号，防止与json数据冲突
-        message = message.replace("\"", "\\\"");
+        message = message.replace("\"", "\\\"").replace("\\\\\"", "\\\\\\\"");
         String jsonData = ("{\"chat_id\": " + sendId + ",\"text\": \"" + message + "\"}");
 
         //发送请求
