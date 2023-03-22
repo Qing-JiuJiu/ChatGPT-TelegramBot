@@ -73,9 +73,12 @@ public class TelegramBotApi {
         }
 
         //判断用户是否是发送了 /start 指令，如果是则发送新建对话消息并删除该用户的ChatGPT对话数据，最终返回Null取消后续操作
-        String username = resultFrom.get("first_name").toString() + " " + resultFrom.get("last_name").asText();
-        String message = resultMessage.get("text").toString();
-        if ("/start".equalsIgnoreCase(message)) {
+        String username = resultFrom.get("first_name").asText() + " " + resultFrom.get("last_name").asText();
+        JsonNode textJsonNode = resultMessage.get("text");
+        //文本用于判断指令，字符串用于存入Json
+        String text = textJsonNode.asText();
+        String message = textJsonNode.toString();
+        if ("/start".equalsIgnoreCase(text)) {
             logger.info("用户 {} 发送了 /start 指令，正在调用 TelegramBot API 发送新建对话消息", username);
             User user = userChatData.get(chatId);
             if (user != null) {
@@ -86,7 +89,7 @@ public class TelegramBotApi {
             return null;
         }
         //判断用户是否是发送了 /response 指令，用于重新响应一次 ChatGPT 的回复
-        if ("/response".equalsIgnoreCase(message)) {
+        if ("/response".equalsIgnoreCase(text)) {
             logger.info("用户 {} 发送了 /response 指令", username);
             if (userChatData.get(chatId) == null) {
                 logger.info("用户 {} 的数据为空，正在调用 TelegramBot API 发送新建对话消息", username);
@@ -95,7 +98,7 @@ public class TelegramBotApi {
             }
         }
         //判断用户是否是发送了 /history 指令，用于继续上一次对话。
-        if ("/history".equalsIgnoreCase(message)) {
+        if ("/history".equalsIgnoreCase(text)) {
             logger.info("用户 {} 发送了 /history 指令", username);
             User user = userHistoryChatData.get(chatId);
             if (user == null) {
