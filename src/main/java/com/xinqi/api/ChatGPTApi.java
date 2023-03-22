@@ -38,7 +38,6 @@ public class ChatGPTApi {
         //准备请求地址和json
         String url = "https://api.openai.com/v1/chat/completions";
         String jsonData = "{\"model\": \"gpt-3.5-turbo\",\"messages\": [" + chatGptMessage + "]}";
-
         //发送请求
         logger.info("正在调用 ChatGPT API 获取聊天内容，请求地址: {}，请求参数: {}", url, jsonData);
         byte[] response = HttpsClientUtil.httpsPostChatGpt(url, new String(jsonData.getBytes(), StandardCharsets.ISO_8859_1), chatGptApi);

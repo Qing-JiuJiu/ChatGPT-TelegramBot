@@ -64,7 +64,7 @@ public class TelegramBotApi {
 
         //获取配置文件里的白名单列表
         JsonNode resultFrom = resultMessage.get("from");
-        String chatId = resultFrom.get("id").asText();
+        String chatId = resultFrom.get("id").toString();
         @SuppressWarnings("unchecked") List<String> whitelist = (List<String>) ConfigEnum.WHITELIST.getValue();
         if (!whitelist.contains("*") && !whitelist.contains(chatId)) {
             logger.info("用户 {} 不在白名单内，正在调用 TelegramBot API 发送不在白名单内的消息", chatId);
@@ -73,8 +73,8 @@ public class TelegramBotApi {
         }
 
         //判断用户是否是发送了 /start 指令，如果是则发送新建对话消息并删除该用户的ChatGPT对话数据，最终返回Null取消后续操作
-        String username = resultFrom.get("first_name").asText() + " " + resultFrom.get("last_name").asText();
-        String message = resultMessage.get("text").asText();
+        String username = resultFrom.get("first_name").toString() + " " + resultFrom.get("last_name").asText();
+        String message = resultMessage.get("text").toString();
         if ("/start".equalsIgnoreCase(message)) {
             logger.info("用户 {} 发送了 /start 指令，正在调用 TelegramBot API 发送新建对话消息", username);
             User user = userChatData.get(chatId);
