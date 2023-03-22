@@ -25,7 +25,6 @@ public class ChatGPTApi {
         User user = TelegramBotApi.userChatData.get(chatId);
         String userMessage = user.getMessage();
         String chatGptMessage = user.getReMessage();
-
         if (StringUtils.nonEmptyString(userMessage)) {
             if (!"/response".equals(message)) {
                 chatGptMessage = userMessage + ",{\"role\": \"user\", \"content\": \"" + message.replace("\"", "\\\"").replace("\\\\\"", "\\\\\\\"") + "\"}";
