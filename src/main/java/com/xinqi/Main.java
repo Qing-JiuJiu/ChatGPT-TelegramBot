@@ -44,7 +44,7 @@ public class Main {
         try {
             config = new Yaml().load(Files.newInputStream(Paths.get(configPath)));
         } catch (IOException e) {
-            logger.error("无法从 {} 该路径下获取配置文件，请检查该路径是否存在配置文件，配置文件可通过解压 jar 包获得，错误打印：{}", configPath, e.getMessage());
+            logger.error("无法从 {} 该路径下获取配置文件，请检查该路径是否存在配置文件，配置文件可通过解压 jar 包获得，错误打印：{}", configPath, e.getMessage(),e);
             System.exit(0);
         }
 
@@ -84,7 +84,7 @@ public class Main {
             try {
                 TelegramBotApi.setMyCommands(ConfigEnum.TELEGRAM_BOT_TOKEN.getValue().toString(), logger);
             } catch (Exception e) {
-                logger.error("配置默认菜单失败，请检查网络条件或配置文件 telegram_bot_token 标签内容正确，错误打印：{}", e.getMessage());
+                logger.error("配置默认菜单失败，请检查网络条件或配置文件 telegram_bot_token 标签内容正确",e);
                 System.exit(0);
             }
         }
